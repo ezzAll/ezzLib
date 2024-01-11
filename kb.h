@@ -14,4 +14,7 @@ void SetDigitalPinMode(uint8_t port, bool mode);
 void SetAnalogPinMode(uint8_t port, uint8_t mode);
 
 void digitalInterrupt(uint8_t port,void (*function)(),uint8_t mode);
+void SerialPort();
+void send_byte(uint8_t byte);
+void send_buffer(char * buffer);
 #endif
