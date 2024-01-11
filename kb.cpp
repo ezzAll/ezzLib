@@ -106,3 +106,24 @@ ISR(INT1_vect) //Обработчик прирываний INT1
 {
   (*userF)();
 }
+void SerialPort(){ //https://dzen.ru/a/Yh73sJWrDF5Zmwt1
+	// Предделитель частоты 1 
+	CLKPR=(1<<CLKPCE);
+	CLKPR=0;
+	
+	UCSR0A = 0;						// Асинхронный режим, 1 стоповый бит, без проверки четности
+	UCSR0B = (1<<TXEN0);					// Включаем передатчик
+	UCSR0C = (1<<UCSZ01) | (1<<UCSZ00) | (0<<UCPOL0);	// 8 бит данных
+	UBRR0H=0;
+	UBRR0L=103;
+}
+void send_byte(uint8_t byte){
+	while(!( UCSR0A & (1 << UDRE0))) ;	// ожидаем, пока UDR0 не будет нулевым (не закончится передача)
+	UDR0 = byte;				// записываем байт в порт
+}
+/* Функция для передачи строки без прерываний */
+void send_buffer(char * buffer)
+{
+	for (uint8_t i = 0; i < sizeof(buffer)/sizeof(int); ++i)
+		send_byte(buffer[i]);
+}
